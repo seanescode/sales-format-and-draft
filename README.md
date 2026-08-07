@@ -5,12 +5,25 @@
 This project automates the preparation of a weekly sales report.
 
 The automation:
-- Opens the Excel sales report
-- Applies the required formatting
-- Saves the updated workbook
-- Creates an Outlook email draft with the report attached
 
-The goal is to reduce manual formatting and email preparation.
+* Opens an Excel sales report
+* Applies the required formatting
+* Saves the updated workbook
+* Creates a Microsoft Outlook email draft with the report attached
+
+The goal is to reduce manual formatting, improve consistency, and speed up the report preparation process.
+
+---
+
+## Features
+
+* Reads settings from a `config.ini` file
+* Automatically formats an Excel worksheet
+* Applies company formatting to headers and report sections
+* Auto-sizes rows and columns
+* Saves the formatted workbook
+* Creates an Outlook email draft with the report attached
+* Records application activity using log files
 
 ---
 
@@ -18,66 +31,106 @@ The goal is to reduce manual formatting and email preparation.
 
 The application requires:
 
-- Python installed
-- Microsoft Excel installed
-- Microsoft Outlook desktop installed
+* Python 3.10 or later
+* Microsoft Excel
+* Microsoft Outlook (desktop version)
 
-Python packages required:
+Install the required Python packages:
 
-- xlwings
-- pywin32
-
-Install required packages using:
-
+```bash
 pip install -r requirements.txt
+```
 
 ---
 
 ## Configuration
 
-The automation settings are stored in:
+Application settings are stored in:
 
+```text
 config.ini
+```
 
 The configuration file controls:
 
-- Excel file location
-- Worksheet name
-- Email recipients
-- Email subject
-- Email body
-- Report formatting options
+* Excel file location
+* Worksheet name
+* Email recipients
+* CC recipients
+* Email subject
+* Email body
+* Excel formatting options
 
-Update the configuration file if these details change.
+Update `config.ini` whenever these settings need to change.
+
+---
+
+## Project Structure
+
+```text
+automation_library/
+│
+├── main.py
+├── config.ini
+├── requirements.txt
+├── logger.py
+├── modules/
+│   ├── workbook.py
+│   ├── outlook.py
+│   └── dialogs.py
+└── tests/
+```
+
+---
+
+## Technologies
+
+* Python
+* xlwings
+* pywin32
+* pytest
+* logging
+* configparser
 
 ---
 
 ## Running the Automation
 
-Run the application using:
+Run the application from the project directory:
 
+```bash
 python main.py
+```
 
 The automation will:
-1. Open the Excel report
-2. Apply the formatting changes
-3. Save the workbook
-4. Create an Outlook email draft
 
-The email can then be reviewed and sent.
+1. Open the Excel report.
+2. Apply the configured formatting.
+3. Save the workbook.
+4. Create an Outlook email draft with the formatted report attached.
+
+The email draft can then be reviewed before sending.
 
 ---
 
 ## Troubleshooting
 
-### Outlook error
+### Outlook is not open
 
-Make sure Microsoft Outlook desktop is open before running the automation.
+Ensure the Microsoft Outlook desktop application is running before starting the automation.
 
-### Excel file not found
+### Excel file cannot be found
 
-Check that the Excel file location in `config.ini` is correct.
+Verify that the file path in `config.ini` is correct and the workbook exists.
 
 ### Configuration error
 
-Check that all required settings exist in `config.ini`.
+Ensure all required settings are present in `config.ini`.
+
+### Missing Python packages
+
+If required packages are missing, install them using:
+
+```bash
+pip install -r requirements.txt
+```

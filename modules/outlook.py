@@ -49,9 +49,9 @@ def create_outlook_email(recipients, cc_recipients, subject, body, attachments=N
 
     if not is_outlook_running():
         show_error_dialog(
-            "Outlook Required",
-            "Automation Failed:\n\nThe Outlook desktop application must be open and running to generate this "
-            "email.\n\nPlease open Outlook and try again. "
+            title="Outlook Required",
+            message="Automation Failed:\n\nThe Outlook desktop application must be open and running to generate this "
+                    "email.\n\nPlease open Outlook and try again. "
         )
         return
 
@@ -69,4 +69,5 @@ def create_outlook_email(recipients, cc_recipients, subject, body, attachments=N
         mail.Display()
 
     except Exception as e:
+
         show_error_dialog("Execution Error", f"Email generation failed:\n\n{e}")

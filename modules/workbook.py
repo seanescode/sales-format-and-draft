@@ -9,14 +9,13 @@ def format_excel(workbook,
                  worksheet,
                  header_colour,
                  bold_title,
-                 italic_opening_lines,
-                 colour_line_two_to_five
+                 italic_title,
                  ):
 
     color_header(worksheet, header_colour)
     worksheet.range("1:1").font.bold = bold_title
-    worksheet.range("2:5").font.italic = italic_opening_lines
-    worksheet.range("2:5").font.color = colour_line_two_to_five
+    worksheet.range("1:1").font.italic = italic_title
+
     worksheet.autofit()
     workbook.save()
 

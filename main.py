@@ -8,9 +8,7 @@ from logger import get_logger
 from modules.workbook import format_excel
 from modules.outlook import create_outlook_email
 
-
 logger = get_logger()
-
 
 # find the absolute, full folder path to the exact script file (main.py) that is running right now
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,22 +26,20 @@ email_body = config.get("EMAIL_CONTENT", "body")
 
 
 # Clean up data structures for your email_tools function requirements
-recipient_list = [email.strip() for email in recipients.split(",")]
-cc_recipient_list = [email.strip() for email in cc_recipients.split(",")]
+recipient_list = [email.strip() for email in recipients.split(";")]
+cc_recipient_list = [email.strip() for email in cc_recipients.split(";")]
 
 
 # Extract data values from the INI file (for Excel formatting)
 bold_title = config.getboolean("EXCEL_REPORT_FORMATTING", "bold_header")
-italic_opening_lines = config.getboolean("EXCEL_REPORT_FORMATTING", "italic_first_five_rows")
-colour_line_two_to_five = ast.literal_eval(
-    config.get("EXCEL_REPORT_FORMATTING", "line_two_to_five_colour")
-)
+italic_header = config.getboolean("EXCEL_REPORT_FORMATTING", "italic_font")
 header_colour = ast.literal_eval(
     config.get("EXCEL_REPORT_FORMATTING", "heading_colour")
 )
-excel_file_location = config.get("EXCEL_REPORT_FORMATTING", "file_location")
-excel_sheet_name = config.get("EXCEL_REPORT_FORMATTING", "sheet_name")
 
+excel_sheet_name = config.get("EXCEL_REPORT_FORMATTING", "sheet_name")
+attachment_paths = config.get("EXCEL_REPORT_FORMATTING", "attachment_paths").split(";")
+attachment_paths = [file.strip() for file in attachment_paths]
 
 app = None
 wb = None
@@ -53,7 +49,7 @@ try:
     logger.info("Starting sales report automation")
 
     app = xlwings.App(visible=False)
-    wb = app.books.open(excel_file_location)
+    wb = app.books.open(attachment_paths[0])
 
     logger.info("Excel workbook opened successfully")
 
@@ -64,8 +60,7 @@ try:
         ws,
         header_colour,
         bold_title,
-        italic_opening_lines,
-        colour_line_two_to_five
+        italic_header
     )
 
     logger.info("Excel formatting completed successfully")
@@ -75,7 +70,7 @@ try:
         cc_recipients=cc_recipient_list,
         subject=email_subject,
         body=email_body,
-        attachments=[str(excel_file_location)]
+        attachments=attachment_paths
     )
 
     logger.info("Outlook email draft created successfully")
