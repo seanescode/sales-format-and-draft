@@ -5,15 +5,16 @@ import ast
 import xlwings
 
 from logger import get_logger
-from modules.workbook import format_excel
+from modules.workbook import (rename_headings, generate_summary_analytics, find_reporting_start_cell,
+                              find_start_cell_subsequent_reports)
 from modules.outlook import create_outlook_email
 
 def main():
     logger = get_logger()
 
     # find the absolute, full folder path to the exact script file (main.py) that is running right now
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-    config_file = os.path.join(SCRIPT_DIR, "config.ini")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_file = os.path.join(script_dir, "config.ini")
 
     config = configparser.ConfigParser()
     config.read(config_file)
@@ -33,14 +34,40 @@ def main():
 
     # Extract data values from the INI file (for Excel formatting)
     bold_title = config.getboolean(section="EXCEL_REPORT_FORMATTING", option="bold_header")
-    italic_header = config.getboolean(section="EXCEL_REPORT_FORMATTING", option="italic_font")
+    italic_cells = config.getboolean(section="EXCEL_REPORT_FORMATTING", option="italic_font")
+    # Read the zoom value as an integer
+    zoom_percent = config.getint(section="EXCEL_REPORT_FORMATTING", option="zoom_percentage")
+
     header_colour = ast.literal_eval(
         config.get(section="EXCEL_REPORT_FORMATTING", option="heading_colour")
+    )
+    even_row_colour = ast.literal_eval(
+        config.get(section="EXCEL_REPORT_FORMATTING", option="even_row_colour")
+    )
+    odd_row_colour = ast.literal_eval(
+        config.get(section="EXCEL_REPORT_FORMATTING", option="odd_row_colour")
     )
 
     excel_sheet_name = config.get(section="EXCEL_REPORT_FORMATTING", option="sheet_name")
     attachment_paths = config.get(section="EXCEL_REPORT_FORMATTING", option="attachment_paths").split(";")
     attachment_paths = [file.strip() for file in attachment_paths]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     app = None
     wb = None
@@ -56,15 +83,36 @@ def main():
 
         ws = wb.sheets[excel_sheet_name]
 
+        rename_headings(ws)
+
+        employee_sales, sales_by_pay_type, sales_by_product = generate_summary_analytics(
+            attachment_paths[0],
+            excel_sheet_name
+        )
+
+        reports_start_cell = find_reporting_start_cell(worksheet=ws)
+        second_report_start_cell = find_start_cell_subsequent_reports(worksheet=ws, cell_from=reports_start_cell)
+        third_report_start_cell = find_start_cell_subsequent_reports(worksheet=ws, cell_from=second_report_start_cell)
+
+        reports_start_cell.options(index=False).value = employee_sales
+        second_report_start_cell.options(index=False).value = sales_by_product
+        third_report_start_cell.options(index=False).value = sales_by_pay_type
+
+
         format_excel(
             wb,
             ws,
             header_colour,
+            even_row_colour,
+            odd_row_colour,
             bold_title,
-            italic_header
+            italic_cells,
+            zoom_percent
         )
 
         logger.info("Excel formatting completed successfully")
+
+
 
         create_outlook_email(
             recipients=recipient_list,
