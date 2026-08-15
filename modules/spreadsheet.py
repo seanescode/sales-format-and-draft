@@ -1,26 +1,5 @@
 import pandas
 
-
-def rename_headings(worksheet):
-    last_column = worksheet.range("A1").end("right").column
-
-    # Start at column 1 and step through to the last column
-    for cell in range(1, last_column + 1):
-        # Read the value once using clean .cells syntax
-        selected_cell = worksheet.cells(1, cell).value
-
-        if selected_cell == "Quantity":
-            worksheet.cells(1, cell).value = "Qty"
-        elif selected_cell == "Unit Price (€)":
-            worksheet.cells(1, cell).value = "Price"
-        elif selected_cell == "Discount (%)":
-            worksheet.cells(1, cell).value = "Discount"
-        elif selected_cell == "Total (€)":
-            worksheet.cells(1, cell).value = "Total"
-        elif selected_cell == "Payment Method":
-            worksheet.cells(1, cell).value = "Pay Type"
-
-
 def _get_table_header_range(worksheet, starting_cell):
     start_cell = worksheet.range(starting_cell)
     row = start_cell.row
@@ -106,9 +85,25 @@ def format_all_tables(worksheet, main_table_start_cell, color_header,
 
 def _generate_summary_analytics(file_path, sheet_name):
     df = pandas.read_excel(file_path, sheet_name)
-    employee_sales = df.groupby('Staff')['Total (€)'].sum().reset_index()
-    sales_by_pay_type = df.groupby('Payment Method')['Total (€)'].sum().reset_index()
-    sales_by_product = df.groupby('Product')['Total (€)'].sum().reset_index()
+
+    employee_sales = (df.groupby('Staff')['Total (€)']
+                      .sum()
+                      .reset_index()
+                      .sort_values('Total (€)', ascending=False)
+    )
+
+    sales_by_pay_type = (df.groupby('Pay Type')['Total (€)']
+                         .sum()
+                         .reset_index()
+                         .sort_values('Total (€)', ascending=False)
+
+    )
+
+    sales_by_product = (df.groupby('Product')['Total (€)']
+                        .sum()
+                        .reset_index()
+                        .sort_values('Total (€)', ascending=False)
+    )
 
     return employee_sales, sales_by_pay_type, sales_by_product
 
@@ -153,3 +148,17 @@ def format_worksheet(worksheet, zoom_percentage):
     worksheet.used_range.rows.autofit()
     for row in worksheet.used_range.rows:
         row.row_height = row.row_height + 3  # Adds tiny safety buffer
+    worksheet.range("B:B").api.EntireColumn.Hidden = True
+    worksheet.range("D:D").api.EntireColumn.Hidden = True
+    worksheet.range("M:M").number_format = "#,##0.00"
+
+def rename_headings(worksheet):
+    last_column = worksheet.range("A1").end("right").column
+
+    # Start at column 1 and step through to the last column
+    for cell in range(1, last_column + 1):
+        # Read the value once using clean .cells syntax
+        selected_cell = worksheet.cells(1, cell).value
+
+        if selected_cell == "Discount (%)":
+            worksheet.cells(1, cell).value = "Disc (%)"
