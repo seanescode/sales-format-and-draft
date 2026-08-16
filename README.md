@@ -2,9 +2,19 @@
 
 ## Overview
 
-<img width="1020" height="651" alt="screen_pic_email_automated" src="https://github.com/user-attachments/assets/7bda58fb-9f41-4696-8107-21d8dc28d6e5" />
-<img width="689" height="637" alt="screen_pic_updated_data" src="https://github.com/user-attachments/assets/0cfa4ef3-1736-4ec3-8183-64b7bde2bffa" />
+Spreadsheet data before:
+
 <img width="935" height="640" alt="screen_pic_raw_data" src="https://github.com/user-attachments/assets/ee0beaa7-215c-49a6-af35-3592617c64b0" />
+
+Spreadsheet data formatted and summary reports inputted automatically:
+
+<img width="689" height="637" alt="screen_pic_updated_data" src="https://github.com/user-attachments/assets/0cfa4ef3-1736-4ec3-8183-64b7bde2bffa" />
+
+Email generated and attachment inputted (ready to send):
+
+<img width="1020" height="651" alt="screen_pic_email_automated" src="https://github.com/user-attachments/assets/7bda58fb-9f41-4696-8107-21d8dc28d6e5" />
+
+
 
 
 This project automates the preparation of a weekly sales report.
