@@ -3,16 +3,17 @@ import modules.dialogs as dialogs
 import pandas
 import xlwings
 
+
 def check_spreadsheet_ready(spreadsheet_path):
     if not os.path.exists(spreadsheet_path):
         dialogs.show_error_dialog(
-            title="Spreadsheet File Not Found",
-            message=f"The sales report could not be found:\n\n{spreadsheet_path}"
+            title="Spreadsheet Not Found",
+            message=f"The sales spreadsheet could not be found:\n\n{spreadsheet_path}"
         )
         return False
     if _is_spreadsheet_open(spreadsheet_path):
         dialogs.show_error_dialog(
-            title="Spreadsheet File Already Open",
+            title="Spreadsheet Already Open",
             message="The sales spreadsheet is already open.\n\n"
                 "Please close it and try again."
         )
@@ -36,6 +37,7 @@ def _get_table_header_range(worksheet, starting_cell):
     start_col = start_cell.column
     end_col = start_cell.end("right").column
     return worksheet.range((row, start_col), (row, end_col))
+
 
 def _format_table_header(worksheet, start_cell, color_header, bold_header):
     header_range = _get_table_header_range(worksheet=worksheet, starting_cell=start_cell)
