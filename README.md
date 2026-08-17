@@ -1,151 +1,65 @@
 # Sales Report Automation
 
-## Overview
+### What the automation does
+I created an automation to make the process of preparing and emailing a weekly sales report quicker and more consistent.
 
-Spreadsheet data before:
-
-<img width="935" height="640" alt="screen_pic_raw_data" src="https://github.com/user-attachments/assets/ee0beaa7-215c-49a6-af35-3592617c64b0" />
-
-Spreadsheet data formatted and summary reports inputted automatically:
-
-<img width="689" height="637" alt="screen_pic_updated_data" src="https://github.com/user-attachments/assets/0cfa4ef3-1736-4ec3-8183-64b7bde2bffa" />
-
-Email generated and attachment inputted (ready to send):
-
-<img width="1020" height="651" alt="screen_pic_email_automated" src="https://github.com/user-attachments/assets/7bda58fb-9f41-4696-8107-21d8dc28d6e5" />
-
-
-
-
-This project automates the preparation of a weekly sales report.
+<img width="1212" height="438" alt="report-auto-formatter" src="https://github.com/user-attachments/assets/e6763fd2-e152-4c7d-9bd7-d7568727b208" />
 
 The automation:
 
-* Opens an Excel sales report
-* Applies the required formatting
-* Saves the updated workbook
-* Creates a Microsoft Outlook email draft with the report attached
+1. Opens the Excel sales report in the background.
+2. Creates summary tables from the sales data.
+3. Formats the report and saves the completed version.
+4. Creates an Outlook email, fills in the email details and attaches the completed report.
 
-The goal is to reduce manual formatting, improve consistency, and speed up the report preparation process.
+The user can then review the email before sending it.
 
----
+### The client can change the settings
 
-## Features
+The automation has a separate configuration file where the client can change certain settings without changing the Python code.
 
-* Reads settings from a `config.ini` file
-* Automatically formats an Excel worksheet
-* Applies company formatting to headers and report sections
-* Auto-sizes rows and columns
-* Saves the formatted workbook
-* Creates an Outlook email draft with the report attached
-* Records application activity using log files
+For example, they can change:
 
----
+- **Report formatting** — such as colours, headings and bold formatting.
+- **Email details** — such as who the email is sent to, who is CC'd, the subject and the email body.
 
-## Requirements
+This means the automation can be adjusted as the client's requirements change without needing to modify the main program.
 
-The application requires:
+### The report can handle changes
 
-* Python 3.10 or later
-* Microsoft Excel
-* Microsoft Outlook (desktop version)
+The summary tables are not placed in fixed cells.
 
-Install the required Python packages:
+Instead, the automation looks at where the report data ends and places the summary tables to the right of it.
 
-```bash
-pip install -r requirements.txt
-```
+For example, if the original report gains additional columns, the summary tables can move further to the right rather than being placed over the new data.
 
----
+This makes the automation more flexible when the layout of the report changes.
 
-## Configuration
+### What is needed to run it
 
-Application settings are stored in:
+- Windows
+- Microsoft Excel desktop
+- Classic Outlook desktop
 
-```text
-config.ini
-```
+The current version uses Pywin32 and Xlwings to interact with these applications.
 
-The configuration file controls:
+### Why I chose this approach
 
-* Excel file location
-* Worksheet name
-* Email recipients
-* CC recipients
-* Email subject
-* Email body
-* Excel formatting options
+I chose a desktop-based approach for this version because it allows the automation to work directly with the Excel and Outlook applications that a client may already be using.
 
-Update `config.ini` whenever these settings need to change.
+It also avoids requiring this version of the automation to connect to Microsoft Graph.
 
----
+There are trade-offs, however. Because this version relies on desktop applications, it is more dependent on the client's computer setup and is not the approach I would necessarily choose for a larger, cloud-based automation.
 
-## Project Structure
+### How I would develop it further
 
-```text
-automation_library/
-│
-├── main.py
-├── config.ini
-├── requirements.txt
-├── logger.py
-├── modules/
-│   ├── workbook.py
-│   ├── outlook.py
-│   └── dialogs.py
-└── tests/
-```
+If this automation needed to be used by more people or deployed on a larger scale, I would look at reducing its dependency on locally installed Microsoft Office applications.
 
----
+For example, I could:
 
-## Technologies
+- Use Microsoft Graph to interact with Outlook without relying on the Outlook desktop application.
+- Reduce the number of Microsoft-specific dependencies.
+- Separate the report-processing part of the automation from the Excel and Outlook parts.
+- Move towards a solution that can run centrally rather than on an individual user's computer.
 
-* Python
-* xlwings
-* pywin32
-* pytest
-* logging
-* configparser
-
----
-
-## Running the Automation
-
-Run the application from the project directory:
-
-```bash
-python main.py
-```
-
-The automation will:
-
-1. Open the Excel report.
-2. Apply the configured formatting.
-3. Save the workbook.
-4. Create an Outlook email draft with the formatted report attached.
-
-The email draft can then be reviewed before sending.
-
----
-
-## Troubleshooting
-
-### Outlook is not open
-
-Ensure the Microsoft Outlook desktop application is running before starting the automation.
-
-### Excel file cannot be found
-
-Verify that the file path in `config.ini` is correct and the workbook exists.
-
-### Configuration error
-
-Ensure all required settings are present in `config.ini`.
-
-### Missing Python packages
-
-If required packages are missing, install them using:
-
-```bash
-pip install -r requirements.txt
-```
+The current version is therefore a practical solution for a Windows-based Microsoft Office environment, while also providing a foundation that could be developed into a more scalable solution if the requirements increased.
