@@ -36,6 +36,8 @@ For example, if the original report gains additional columns, the summary tables
 
 This makes the automation more flexible when the layout of the report changes.
 
+<img width="1174" height="369" alt="report_auto_format_dynamic_positions_before_and_after" src="https://github.com/user-attachments/assets/e80fad5a-f338-46a2-94ba-e0eea2f00491" />
+
 ### What is needed to run it
 
 - Windows
