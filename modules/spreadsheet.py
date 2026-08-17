@@ -1,4 +1,34 @@
+import os
+import modules.dialogs as dialogs
 import pandas
+import xlwings
+
+def check_spreadsheet_ready(spreadsheet_path):
+    if not os.path.exists(spreadsheet_path):
+        dialogs.show_error_dialog(
+            title="Spreadsheet File Not Found",
+            message=f"The sales report could not be found:\n\n{spreadsheet_path}"
+        )
+        return False
+    if _is_spreadsheet_open(spreadsheet_path):
+        dialogs.show_error_dialog(
+            title="Spreadsheet File Already Open",
+            message="The sales spreadsheet is already open.\n\n"
+                "Please close it and try again."
+        )
+        return False
+    return True
+
+
+def _is_spreadsheet_open(spreadsheet_path):
+    target_path = os.path.abspath(spreadsheet_path).lower()
+
+    for app in xlwings.apps:
+        for book in app.books:
+            if os.path.abspath(book.fullname).lower() == target_path:
+                return True
+
+    return False
 
 def _get_table_header_range(worksheet, starting_cell):
     start_cell = worksheet.range(starting_cell)
@@ -55,6 +85,7 @@ def _format_table(worksheet,
 
 def format_all_tables(worksheet, main_table_start_cell, color_header,
                       is_bold_header, even_row_color, odd_row_color, is_italic):
+
 
     analytics_starting_cell = _find_analytics_start_cell(
         worksheet, main_table_start_cell
@@ -150,7 +181,7 @@ def format_worksheet(worksheet, zoom_percentage):
         row.row_height = row.row_height + 3  # Adds tiny safety buffer
     worksheet.range("B:B").api.EntireColumn.Hidden = True
     worksheet.range("D:D").api.EntireColumn.Hidden = True
-    worksheet.range("M:M").number_format = "#,##0.00"
+    worksheet.range("H:H, F:F, M:M").number_format = "#,##0.00"
 
 def rename_headings(worksheet):
     last_column = worksheet.range("A1").end("right").column

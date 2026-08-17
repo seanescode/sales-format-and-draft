@@ -44,19 +44,27 @@ def add_attachments(mail, attachments):
             )
         mail.Attachments.Add(attachment)
 
-
-def create_outlook_email(recipients, cc_recipients, subject, body, attachments=None):
-
+def check_outlook_ready(recipients):
     if not is_outlook_running():
         show_error_dialog(
             title="Outlook Required",
             message="Automation Failed:\n\nThe Outlook desktop application must be open and running to generate this "
                     "email.\n\nPlease open Outlook and try again. "
         )
-        return
-
+        return False
     if not recipients:
         show_error_dialog("No Recipients", "Please specify at least one recipient before creating the email.")
+        return False
+    return True
+
+def create_outlook_email(recipients, cc_recipients, subject, body, attachments=None):
+
+    if not is_outlook_running(): # this is a defensive check even though checking outlook is running at start this ensures is still running even if outlook is terminated between program being run and code getting to here
+        show_error_dialog(
+            title="Outlook Required",
+            message="Automation Failed:\n\nThe Outlook desktop application must be open and running to generate this "
+                    "email.\n\nPlease open Outlook and try again. "
+        )
         return
 
     try:

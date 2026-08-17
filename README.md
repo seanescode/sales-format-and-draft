@@ -7,7 +7,7 @@ This project automates the preparation of a weekly sales report.
 The automation:
 
 * Opens an Excel sales report
-* Applies the required formatting
+* Applies formatting and generates summarised data
 * Saves the updated workbook
 * Creates a Microsoft Outlook email draft with the report attached
 

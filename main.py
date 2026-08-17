@@ -4,23 +4,34 @@ import xlwings
 from modules import config, outlook, spreadsheet
 
 def main():
+
+    app = None
+    wb = None
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     config_file = os.path.join(script_dir, "config.ini")
 
     settings = config.load_config(config_file)
+
     email_settings = config.get_email_settings(settings)
     excel_settings = config.get_excel_settings(settings)
 
-    app = xlwings.App(visible=False)
-    wb = app.books.open(
-        excel_settings["attachment_paths"][0]
-    )
+    spreadsheet_path = excel_settings["attachment_paths"][0]
 
-    ws = wb.sheets[
-        excel_settings["sheet_name"]
-    ]
+    if not spreadsheet.check_spreadsheet_ready(spreadsheet_path):
+        return
+    if not outlook.check_outlook_ready(email_settings["recipients"]):
+        return
 
     try:
+        app = xlwings.App(visible=False)
+        wb = app.books.open(
+            spreadsheet_path
+        )
+        ws = wb.sheets[
+            excel_settings["sheet_name"]
+        ]
+
         spreadsheet.rename_headings(ws)
         spreadsheet.write_analytics(
             file_path=excel_settings["attachment_paths"][0],
@@ -37,7 +48,6 @@ def main():
             odd_row_color=excel_settings["odd_row_colour"],
             is_italic=excel_settings["italic_cells"],
         )
-
         spreadsheet.format_worksheet(
             ws,
             excel_settings["zoom_percent"]
@@ -56,8 +66,10 @@ def main():
         )
 
     finally:
-        wb.close()
-        app.quit()
+        if wb is not None:
+            wb.close()
+        if app is not None:
+            app.quit()
 
 if __name__ == "__main__":
     main()
