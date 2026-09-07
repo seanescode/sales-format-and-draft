@@ -1,4 +1,5 @@
 import os
+
 import modules.dialogs as dialogs
 import pandas
 import xlwings
@@ -15,7 +16,7 @@ def check_spreadsheet_ready(spreadsheet_path):
         dialogs.show_error_dialog(
             title="Spreadsheet Already Open",
             message="The sales spreadsheet is already open.\n\n"
-                "Please close it and try again."
+                    "Please close it and try again."
         )
         return False
     return True
@@ -30,6 +31,7 @@ def _is_spreadsheet_open(spreadsheet_path):
                 return True
 
     return False
+
 
 def _get_table_header_range(worksheet, starting_cell):
     start_cell = worksheet.range(starting_cell)
@@ -67,7 +69,6 @@ def _format_table_body(worksheet, table_top_left_cell, even_row_color, odd_row_c
     last_cell_row = worksheet.range((first_cell_row, first_cell_column)).end("down").row
     last_cell_column = worksheet.range((last_cell_row, first_cell_column)).end("right").column
 
-
     for row in range(first_cell_row, last_cell_row + 1):
         row_color = even_row_color if row % 2 == 0 else odd_row_color
         worksheet.range((row, first_cell_column), (row, last_cell_column)).color = row_color
@@ -87,8 +88,6 @@ def _format_table(worksheet,
 
 def format_all_tables(worksheet, main_table_start_cell, color_header,
                       is_bold_header, even_row_color, odd_row_color, is_italic):
-
-
     analytics_starting_cell = _find_analytics_start_cell(
         worksheet, main_table_start_cell
     )
@@ -100,10 +99,10 @@ def format_all_tables(worksheet, main_table_start_cell, color_header,
     )
 
     for starting_cell in (
-        main_table_start_cell,
-        analytics_starting_cell,
-        second_starting_cell,
-        third_starting_cell,
+            main_table_start_cell,
+            analytics_starting_cell,
+            second_starting_cell,
+            third_starting_cell,
     ):
         _format_table(
             worksheet,
@@ -123,20 +122,20 @@ def _generate_summary_analytics(file_path, sheet_name):
                       .sum()
                       .reset_index()
                       .sort_values('Total (€)', ascending=False)
-    )
+                      )
 
     sales_by_pay_type = (df.groupby('Pay Type')['Total (€)']
                          .sum()
                          .reset_index()
                          .sort_values('Total (€)', ascending=False)
 
-    )
+                         )
 
     sales_by_product = (df.groupby('Product')['Total (€)']
                         .sum()
                         .reset_index()
                         .sort_values('Total (€)', ascending=False)
-    )
+                        )
 
     return employee_sales, sales_by_pay_type, sales_by_product
 
@@ -175,7 +174,7 @@ def format_worksheet(worksheet, zoom_percentage):
     worksheet.range("A1").select()
 
     # autosize rows and columns
-    #Expand columns horizontally so wide text fits
+    # Expand columns horizontally so wide text fits
     worksheet.autofit(axis="columns")
     # Expand rows vertically but add 3 points of padding so nothing clips
     worksheet.used_range.rows.autofit()
@@ -184,6 +183,7 @@ def format_worksheet(worksheet, zoom_percentage):
     worksheet.range("B:B").api.EntireColumn.Hidden = True
     worksheet.range("D:D").api.EntireColumn.Hidden = True
     worksheet.range("H:H, F:F, M:M").number_format = "#,##0.00"
+
 
 def rename_headings(worksheet):
     last_column = worksheet.range("A1").end("right").column

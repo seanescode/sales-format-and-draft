@@ -1,7 +1,8 @@
 import os
-import time
-import win32com.client as win32
 import subprocess
+import time
+
+import win32com.client as win32
 from modules.dialogs import show_error_dialog
 
 
@@ -44,6 +45,7 @@ def add_attachments(mail, attachments):
             )
         mail.Attachments.Add(attachment)
 
+
 def check_outlook_ready(recipients):
     if not is_outlook_running():
         show_error_dialog(
@@ -57,9 +59,9 @@ def check_outlook_ready(recipients):
         return False
     return True
 
-def create_outlook_email(recipients, cc_recipients, subject, body, attachments=None):
 
-    if not is_outlook_running(): # this is a defensive check even though checking outlook is running at start this ensures is still running even if outlook is terminated between program being run and code getting to here
+def create_outlook_email(recipients, cc_recipients, subject, body, attachments=None):
+    if not is_outlook_running():  # this is a defensive check even though checking outlook is running at start this ensures is still running even if outlook is terminated between program being run and code getting to here
         show_error_dialog(
             title="Outlook Required",
             message="Automation Failed:\n\nThe Outlook desktop application must be open and running to generate this "

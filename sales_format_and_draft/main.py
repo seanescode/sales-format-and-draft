@@ -1,15 +1,16 @@
-import os
+from pathlib import Path
 
 import xlwings
+
 from modules import config, outlook, spreadsheet
 
-def main():
 
+def main():
     app = None
     wb = None
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    config_file = os.path.join(script_dir, "config.ini")
+    script_dir = Path(__file__).resolve().parent.parent
+    config_file = str(script_dir / "config.ini")
 
     settings = config.load_config(config_file)
 
@@ -70,6 +71,7 @@ def main():
             wb.close()
         if app is not None:
             app.quit()
+
 
 if __name__ == "__main__":
     main()
