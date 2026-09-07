@@ -180,7 +180,7 @@ def format_worksheet(worksheet, zoom_percentage):
     # Expand rows vertically but add 3 points of padding so nothing clips
     worksheet.used_range.rows.autofit()
     for row in worksheet.used_range.rows:
-        row.row_height = row.row_height + 3  # Adds tiny safety buffer
+        row.row_height = row.row_height + 5  # Adds tiny safety buffer
     worksheet.range("B:B").api.EntireColumn.Hidden = True
     worksheet.range("D:D").api.EntireColumn.Hidden = True
     worksheet.range("H:H, F:F, M:M").number_format = "#,##0.00"
