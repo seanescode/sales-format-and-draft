@@ -2,7 +2,8 @@ from pathlib import Path
 
 import xlwings
 
-from modules import config, outlook, spreadsheet
+from sales_format_and_draft import config, spreadsheet
+from sales_format_and_draft import outlook
 
 
 def main():

@@ -3,7 +3,7 @@ import subprocess
 import time
 
 import win32com.client as win32
-from modules.dialogs import show_error_dialog
+from sales_format_and_draft.dialogs import show_error_dialog
 
 
 def is_outlook_running():
