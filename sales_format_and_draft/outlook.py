@@ -7,7 +7,7 @@ from sales_format_and_draft.dialogs import show_error_dialog
 
 
 def is_outlook_running():
-    running_processes = subprocess.check_output(["tasklist"], text=True)
+    running_processes = subprocess.check_output(["tasklist"], text=True, creationflags=subprocess.CREATE_NO_WINDOW)
     return "OUTLOOK.EXE" in running_processes.upper()
 
 

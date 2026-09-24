@@ -1,12 +1,24 @@
 import ast
 import configparser
+import sys
+from pathlib import Path
 
 
 EMAIL_SETTINGS = "EMAIL_SETTINGS"
 EXCEL_SETTINGS = "EXCEL_REPORT_FORMATTING"
 
 
-def load_config(config_file):
+def load_config(config_file=None):
+    if config_file is None:
+        # Determine config file path
+        if getattr(sys, 'frozen', False):
+            # Running as PyInstaller bundle
+            script_dir = Path(sys._MEIPASS)
+        else:
+            # Running as normal Python script
+            script_dir = Path(__file__).resolve().parent.parent
+        config_file = str(script_dir / "config.ini")
+    
     config = configparser.ConfigParser()
     config.read(config_file)
     return config

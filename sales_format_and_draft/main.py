@@ -10,10 +10,7 @@ def main():
     app = None
     wb = None
 
-    script_dir = Path(__file__).resolve().parent.parent
-    config_file = str(script_dir / "config.ini")
-
-    settings = config.load_config(config_file)
+    settings = config.load_config()
 
     email_settings = config.get_email_settings(settings)
     excel_settings = config.get_excel_settings(settings)
